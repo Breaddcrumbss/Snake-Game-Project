@@ -1,7 +1,7 @@
 {
     "max_steps": 50,
     "init_hp": 40,
-    "init_tail_size": 4,
+    "init_tail_size": 0,
     "num_fruits": 1,
     "gs": 6,
     "perspective": "third",

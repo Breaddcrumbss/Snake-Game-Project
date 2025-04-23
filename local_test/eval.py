@@ -5,7 +5,6 @@ import torch
 import json
 import numpy as np
 from stable_baselines3.common.monitor import Monitor
-from feature_extractor import CustomCNN
 import imageio
 
 # action_map = {
