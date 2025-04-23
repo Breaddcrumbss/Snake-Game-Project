@@ -3,6 +3,7 @@ from gym_env import SnakeGameEnv
 from stable_baselines3 import PPO
 import torch
 import json
+import numpy as np
 from stable_baselines3.common.monitor import Monitor
 from feature_extractor import CustomCNN
 import imageio
@@ -24,13 +25,14 @@ with open("param_configs/eval.json", "r") as f:
     game_params = json.load(f)
 
 # Load the trained model 
-model = PPO.load("temp/ppo_snake4.8d_staged_ent01_large_arch2.zip")
+model = PPO.load("final_model.zip")
+# model = PPO.load("models\\old_models2\\ppo_snake4.2_2b.zip")
 print(model.policy)
-input("Press Enter to continue...")
+# input("Press Enter to continue...")
 
 
 # Create a new environment instance for evaluation
-env = (SnakeGameEnv(**game_params, render_mode='rgb_array'))
+env = (SnakeGameEnv(**game_params, render_mode='human'))
 
 # Evaluate the model
 # rew, std = evaluate_policy(model, env, n_eval_episodes=50, render=False, return_episode_rewards=False, warn=True, deterministic=False)
@@ -40,7 +42,9 @@ frames = []
 num_episodes = 1
 all_action_probs = []
 
+scores = []
 for _ in range(num_episodes):
+    # break
     obs, _ = env.reset()
     done = False
 
@@ -52,17 +56,19 @@ for _ in range(num_episodes):
             all_action_probs.append(action_probs)
 
         paired_probs = [(action_map[i], round(prob, ndigits=3)) for i, prob in enumerate(action_probs)]
-        print(f"Action Dist: {paired_probs}")
+        # print(f"Action Dist: {paired_probs}")
         frame = env.render()
-        frames.append(frame)
-        action, _ = model.predict(obs, deterministic=True)
-        print(f"Action: {action_map[int(action)]}")
+        # frames.append(frame)
+        action, _ = model.predict(obs, deterministic=False)
+        # print(f"Action: {action_map[int(action)]}")
         obs, reward, done,_, info = env.step(int(action))
         if done:
             print(info)
+            scores.append(info['Scores'])
             input("Press Enter to continue...")
 
-    imageio.mimsave("test.gif", frames, fps=30)
+print(np.mean(scores))
+    # imageio.mimsave("test.gif", frames, fps=30)
 
 
 

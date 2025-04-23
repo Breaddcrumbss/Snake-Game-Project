@@ -1,6 +1,6 @@
 /jack_snake
 */__pycache__
-*.zip
+models/
 logs
 old_logs
 temp

@@ -265,6 +265,7 @@ class Env:
         hp_decay = self.decay_rate and self.time_steps % self.decay_rate == 0
 
         snake_states = []
+
         snake = self.snakes[snake_id]
         snake.apply_direction(direction)
         snake.update(hp_decay)
